@@ -26,6 +26,7 @@ SECRET_KEY = '1yct-t!2bnkgc7j59z+9cdd2k)@y+ftqor$!aya()3if^cnlo-'
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'uniqueprojectname.herokuapp.com']
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 
@@ -154,7 +155,3 @@ try:
     from makewiki.local_settings import *
 except ImportError:
     pass
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-
