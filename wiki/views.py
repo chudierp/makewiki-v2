@@ -1,13 +1,13 @@
 from django.shortcuts import render
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic import CreateView
+from django.views.generic import FormView
+from .forms import FriendlyForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 
-
 from wiki.models import Page
-from wiki.forms import PageForm
 
 
 class PageListView(ListView):
@@ -17,12 +17,10 @@ class PageListView(ListView):
     def get(self, request):
         """ GET a list of Pages. """
         pages = self.get_queryset().all()
-        return render(request, 'list.html', {
-          'pages': pages
-        })
+        return render(request, 'list.html', {'pages': pages})
 
 class PageDetailView(DetailView):
-    """ Renders a specific page based on it's slug."""
+    """ Renders a specific page based on its slug."""
     model = Page
 
     def get(self, request, slug):
@@ -32,14 +30,24 @@ class PageDetailView(DetailView):
           'page': page
         })
 
-class PageView(CreateView):
-  def get(self, request, *args, **kwargs):
-      context = {'form': PageForm()}
-      return render(request, 'partials/newpage.html', context)
 
-  def post(self, request, *args, **kwargs):
-      form = PageForm(request.POST)
-      if form.is_valid():
-          book = form.save()
-          return HttpResponseRedirect(reverse_lazy('wiki-list-page'))
-      return render(request, 'partials/newpage.html', {'form': form})    
+class PageCreateView(CreateView):
+    model = Page
+    fields = ['title', 'content', 'author']
+    template_name = 'new.html'
+
+
+
+class ContactView(FormView):
+    form_class = FriendlyForm
+    template_name = 'contact-us.html'
+    success_url = reverse_lazy('contact-us')
+
+    def form_valid(self, form):
+        self.send_mail(form.cleaned_data)
+        return super(ContactView, self).form_valid(form)
+
+    def send_mail(self, valid_data):
+        # Send mail logic
+        print(valid_data)
+        pass

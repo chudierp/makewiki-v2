@@ -1,21 +1,18 @@
 from django.shortcuts import render
 
+# Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from rest_framework.generics import ListCreateAPIView, RetrieveDestroyAPIView
 
-from polls.models import Question, Choice
-from api.serializers import QuestionSerializer
-from api.serializers import ChoiceSerializer
+from wiki.models import Page
+from api.serializers import PageSerializer
 
-class QuestionList(APIView):
-    def get(self, request):
-        questions = Question.objects.all()[:20]
-        data = QuestionSerializer(questions, many=True).data
-        return Response(data)
+class PageList(ListCreateAPIView):
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer
 
-class QuestionDetail(APIView):
-    def get(self, request, pk):
-        question = get_object_or_404(Question, pk=pk)
-        data = QuestionSerializer(question).data
-        return Response(data)
+class PageDetail(RetrieveDestroyAPIView):
+    queryset = Page.objects.all()
+    serializer_class = PageSerializer   

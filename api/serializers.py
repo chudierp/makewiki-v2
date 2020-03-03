@@ -1,14 +1,8 @@
 from rest_framework.serializers import ModelSerializer
-from django.db import models
 
-from wiki.models import Question, Choice
+from wiki.models import Page
 
-class QuestionSerializer(ModelSerializer):
+class PageSerializer(ModelSerializer):
     class Meta:
-        model = Question
-        fields = '__all__'
-
-class ChoiceSerializer(ModelSerializer):
-    class Meta:
-        model = Choice
+        model = Page
         fields = '__all__'
